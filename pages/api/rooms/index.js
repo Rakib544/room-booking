@@ -1,8 +1,9 @@
 import nc from "next-connect";
 import dbConnect from "../../../config/dbConnection";
 import { allRooms, newRoom } from "../../../controllers/roomControllers";
+import onError from "../../../middlewares/error";
 
-const handler = nc();
+const handler = nc({ onError });
 
 dbConnect();
 
