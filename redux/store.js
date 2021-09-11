@@ -1,16 +1,18 @@
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
-import { applyMiddleWare, createStore } from "redux";
-import thunkMiddleware from "redux-thunk";
+import { applyMiddleware, createStore } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunk from "redux-thunk";
 import reducers from "./reducers/reducers";
+const middleware = [thunk];
 
-const bindMiddleWare = (middleware) => {
-  if (process.env.NODE_ENV !== "production") {
-    const { composeWithDevTools } = require("redux-devtools-extension");
-    return composeWithDevTools(applyMiddleWare(...middleware));
-  }
+// const bindMiddleWare = (middleware) => {
+//   if (process.env.NODE_ENV !== "production") {
+//     const { composeWithDevTools } = require("redux-devtools-extension");
+//     return composeWithDevTools(applyMiddleWare(...middleware));
+//   }
 
-  return applyMiddleWare(...middleware);
-};
+//   return applyMiddleWare(...middleware);
+// };
 
 const reducer = (state, action) => {
   if (action.type === HYDRATE) {
@@ -25,7 +27,10 @@ const reducer = (state, action) => {
 };
 
 const initialStore = () => {
-  return createStore(reducer, bindMiddleWare(thunkMiddleware));
+  return createStore(
+    reducer,
+    composeWithDevTools(applyMiddleware(...middleware))
+  );
 };
 
 export const wrapper = createWrapper(initialStore);

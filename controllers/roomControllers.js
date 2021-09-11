@@ -4,28 +4,49 @@ import ErrorHandler from "../utils/errorHandlers";
 
 //get all rooms => api/rooms
 const allRooms = catchAsyncErrors(async (req, res) => {
-  const resPerPage = 4;
+  const resPerPage = 2;
   const roomCount = await Room.countDocuments();
 
-  let rooms = await apiFeatures.query;
+  let rooms = await Room.find();
   let filteredRoomsCount = rooms.length;
 
-  const category = req.query.category;
-  const location = req.query.location
-    ? {
-        address: {
-          $regex: req.query.location,
-          $options: "i",
-        },
-        category: category,
-      }
-    : { category: category };
-  const currentPage = Number(req.query.page) || 1;
-  const skip = resPerPage * (currentPage - 1);
+  if (req.query.category) {
+    const category = req.query.category;
+    const location = req.query.location
+      ? {
+          address: {
+            $regex: req.query.location,
+            $options: "i",
+          },
+          category: category,
+        }
+      : { category: category };
+    const currentPage = Number(req.query.page) || 1;
+    const skip = resPerPage * (currentPage - 1);
 
-  rooms = await Room.find({ ...location })
-    .limit(currentPage)
-    .skip(skip);
+    rooms = await Room.find({ ...location })
+      .limit(currentPage)
+      .skip(skip);
+  }
+
+  if (req.query.location) {
+    const category = req.query.category;
+    const location = req.query.location
+      ? {
+          address: {
+            $regex: req.query.location,
+            $options: "i",
+          },
+          category: category,
+        }
+      : { category: category };
+    const currentPage = Number(req.query.page) || 1;
+    const skip = resPerPage * (currentPage - 1);
+
+    rooms = await Room.find({ ...location })
+      .limit(currentPage)
+      .skip(skip);
+  }
 
   res.status(200).json({
     success: true,

@@ -1,6 +1,9 @@
 import Image from "next/image";
+import { useSelector } from "react-redux";
 
 const Home = () => {
+  useSelector((state) => console.log(state));
+  // console.log(rooms);
   return (
     <section id="rooms" className="container mt-5">
       <h2 className="mb-3 ml-2 stays-heading">Stays in New York</h2>
